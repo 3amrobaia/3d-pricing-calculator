@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Printing Price Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .description {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>3D Printing Price Calculator</h1>
+
+    <div class="container">
+        <label for="quality">Quality (1-10):</label>
+        <input type="range" id="quality" min="1" max="10" value="5">
+        <span id="qualityValue">5</span>
+        <div class="description">
+            <p><strong>1:</strong> Draft quality with visible layers, for display or rough projects.</p>
+            <p><strong>10:</strong> Highest quality with smooth surfaces, no visible layers, for detailed prototypes.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <label for="strength">Strength (1-10):</label>
+        <input type="range" id="strength" min="1" max="10" value="5">
+        <span id="strengthValue">5</span>
+        <div class="description">
+            <p><strong>1:</strong> Minimal strength with fewer walls (1 wall) and low infill (10%) for display purposes.</p>
+            <p><strong>10:</strong> Maximum strength with more walls (4 walls) and high infill (30%) for functional, durable prints.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <label for="speed">Speed (1-10):</label>
+        <input type="range" id="speed" min="1" max="10" value="5">
+        <span id="speedValue">5</span>
+        <div class="description">
+            <p><strong>Speed Description:</strong></p>
+            <p id="speedDesc">Speed ranges from 10 days (1) to under 24 hours (10). Adjust for your desired project completion time.</p>
+        </div>
+    </div>
+
+    <div class="output">
+        Total Price per gram: <span id="price">4</span> LE
+    </div>
+
+    <script>
+        function calculatePrice() {
+            const quality = parseInt(document.getElementById("quality").value);
+            const strength = parseInt(document.getElementById("strength").value);
+            const speed = parseInt(document.getElementById("speed").value);
+
+            // Formula to calculate price between 3 and 6 LE per gram based on inputs
+            const price = 3 + (quality + strength + speed) / 30 * 3;
+
+            // Update the displayed values
+            document.getElementById("qualityValue").textContent = quality;
+            document.getElementById("strengthValue").textContent = strength;
+            document.getElementById("speedValue").textContent = speed;
+            document.getElementById("price").textContent = price.toFixed(2);
+
+            // Update the Speed description dynamically based on slider value
+            let speedText;
+            if (speed == 10) {
+                speedText = "under 24 hours";
+            } else if (speed == 1) {
+                speedText = "more than 10 days";
+            } else {
+                const days = Math.round((10 - speed) * 0.9 + 1); // A simple formula to calculate days based on speed
+                speedText = `${days} days`;
+            }
+
+            document.getElementById("speedDesc").textContent = `Speed ranges from 10 days (1) to under 24 hours (10). Adjust for your desired project completion time. Your choice: ${speedText}.`;
+        }
+
+        // Add event listeners for each input to trigger price calculation
+        document.getElementById("quality").addEventListener("input", calculatePrice);
+        document.getElementById("strength").addEventListener("input", calculatePrice);
+        document.getElementById("speed").addEventListener("input", calculatePrice);
+
+        // Initial price calculation
+        calculatePrice();
+    </script>
+</body>
+</html>
